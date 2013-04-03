@@ -1,0 +1,5 @@
+  <%= @type %> {
+<% @params.sort.map do |param_name,param_value| -%>
+    <%= param_name %> => <%= param_value %>
+<% end -%>
+  }

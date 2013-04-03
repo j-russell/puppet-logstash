@@ -1,0 +1,41 @@
+{
+  "name": "jrussell-logstash",
+  "author": "Josh Russell",
+  "description": "Install and configure Logstash",
+  "license": "Apache License, Version 2.0",
+  "project_page": "https://github.com/j-russell/puppet-logstash",
+  "source": "https://github.com/j-russell/puppet-logstash",
+  "summary": "Install and configure Logstash",
+  "version": "1.0.0",
+  "checksums": {
+    "Modulefile": "cb72880c4cd62eff4a04c8cab2172f4a",
+    "README.md": "7f8ec83666b0d0aac0dba6b3dd36f6d5",
+    "manifests/config.pp": "6b938b7cd99674efe5381c877fdbe5d2",
+    "manifests/config/filter.pp": "c99a6abc7653a2a9bf6a34704ccb8d7e",
+    "manifests/config/input.pp": "885134dd6c460a20392eaf9e3ce3818e",
+    "manifests/config/output.pp": "42aa26c7e7edf30de9fe94a5abcb98c1",
+    "manifests/grok/pattern.pp": "39bbe426819f7504e49ba05867752233",
+    "manifests/indexer.pp": "fb5a2a990d5ce74241f0cea62c84ebd4",
+    "manifests/init.pp": "615b7d5b8de73b684abef8453fa63e9b",
+    "manifests/javainitscript.pp": "2786fb1614ad95eb55a5ae72804803ac",
+    "manifests/package.pp": "3f5cc22c780b62e44645bf2e95566ff0",
+    "manifests/redis.pp": "fb6965c90db9d16a54f9053ee7adac2d",
+    "manifests/shipper.pp": "4d0012c3bf45de93b357aaa508bc49b9",
+    "manifests/user.pp": "4bb5d84761190e5f32161acaffa1f472",
+    "manifests/web.pp": "6ab3251c3cd7bcf2fe59fff95f7393aa",
+    "templates/config/fragment.erb": "ff729a3ab4d0cc75e8b6a87da03290bb",
+    "templates/grok/pattern.erb": "4f4c20f5758201e0376a48753d6cb184",
+    "templates/javainitscript.erb": "f23570a0a5715e01452fa7ba57cea712",
+    "templates/redis.conf.erb": "a4cbc7a17a77b49f2c82cae0581526ce"
+  },
+  "dependencies": [
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": "\u003e\u003d3.1.0"
+    },
+    {
+      "name": "ripienaar/concat",
+      "version_requirement": "\u003e\u003d0.2.0"
+    }
+  ]
+}
