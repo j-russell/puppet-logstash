@@ -5,7 +5,7 @@ class logstash::package (
   $logstash_baseurl      = $::logstash::config::logstash_baseurl) {
   Class['::logstash::config'] -> Class['::logstash::package']
 
-  $logstash_jar = sprintf('%s-%s-%s', 'logstash', $logstash_version, 'monolithic.jar')
+  $logstash_jar = sprintf('%s-%s-%s', 'logstash', $logstash_version, 'flatjar.jar')
   $jar          = "${logstash_home}/${logstash_jar}"
 
   if $logstash_jar_provider == 'package' {
