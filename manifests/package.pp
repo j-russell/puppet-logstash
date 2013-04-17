@@ -28,7 +28,6 @@ class logstash::package (
     path    => [
       '/usr/bin',
       '/usr/sbin'],
-    require => Package['curl'],
   }
 
   if $logstash_jar_provider == 'external' {
