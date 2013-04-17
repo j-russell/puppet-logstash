@@ -14,9 +14,7 @@ class logstash::config (
   $elasticsearch_provider = 'external',
   $elasticsearch_host     = '127.0.0.1',
   $elasticsearch_cluster  = 'elasticsearch',
-  $java_provider          = 'package',
-  $java_package           = 'java-1.7.0-openjdk',
-  $java_home              = '/usr/lib/jvm/jre-1.7.0-openjdk.x86_64') {
+  $java_home              = '/usr/lib/jvm/jre') {
   file { $logstash_home: ensure => 'directory', }
 
   file { "${logstash_home}/bin/":
@@ -51,8 +49,6 @@ class logstash::config (
     logstash_version      => $logstash_version,
     logstash_jar_provider => $logstash_jar_provider,
     logstash_baseurl      => $logstash_baseurl,
-    java_provider         => $java_provider,
-    java_package          => $java_package,
   }
 
   class { '::logstash::user':

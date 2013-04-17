@@ -2,9 +2,7 @@ class logstash::package (
   $logstash_home         = $::logstash::config::logstash_home,
   $logstash_version      = $::logstash::config::logstash_version,
   $logstash_jar_provider = $::logstash::config::logstash_jar_provider,
-  $logstash_baseurl      = $::logstash::config::logstash_baseurl,
-  $java_provider         = $::logstash::config::java_provider,
-  $java_package          = $::logstash::config::java_package) {
+  $logstash_baseurl      = $::logstash::config::logstash_baseurl) {
   Class['::logstash::config'] -> Class['::logstash::package']
 
   $logstash_jar = sprintf('%s-%s-%s', 'logstash', $logstash_version, 'monolithic.jar')
@@ -35,12 +33,6 @@ class logstash::package (
 
   if $logstash_jar_provider == 'external' {
     notify { "It's up to you to provde ${logstash_jar}":
-    }
-  }
-
-  if $java_provider == 'package' {
-    package { $java_package:
-      ensure => installed,
     }
   }
 }
