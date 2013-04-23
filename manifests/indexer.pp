@@ -2,8 +2,8 @@ class logstash::indexer (
   $filterworkers = 1) {
   Class['::logstash::config', '::logstash::package'] -> Class['::logstash::indexer']
 
-  User <| tag == 'logstash' |>
   Group <| tag == 'logstash' |>
+  User <| tag == 'logstash' |>
 
   include concat::setup
 

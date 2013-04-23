@@ -1,8 +1,8 @@
 class logstash::shipper {
   Class['::logstash::config', '::logstash::package'] -> Class['::logstash::shipper']
 
-  User <| tag == 'logstash' |>
   Group <| tag == 'logstash' |>
+  User <| tag == 'logstash' |>
 
   include concat::setup
 

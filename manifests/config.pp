@@ -52,6 +52,8 @@ class logstash::config (
   }
 
   class { '::logstash::user':
+    logstash_user     => $logstash_user,
+    logstash_group    => $logstash_group,
     logstash_user_uid => $logstash_user_uid,
     logstash_user_gid => $logstash_user_gid,
     logstash_home     => $logstash_home,

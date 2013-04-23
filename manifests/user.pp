@@ -1,4 +1,6 @@
 class logstash::user (
+  $logstash_user     = $::logstash::config::logstash_user,
+  $logstash_group    = $::logstash::config::logstash_group,
   $logstash_user_uid = $::logstash::config::logstash_user_uid,
   $logstash_user_gid = $::logstash::config::logstash_user_gid,
   $logstash_home     = $::logstash::config::logstash_home) {
@@ -11,19 +13,20 @@ class logstash::user (
     system     => true,
   }
 
-  Group { ensure => present }
+  Group {
+    ensure => present }
 
-  @group { $::logstash::config::logstash_group:
+  @group { $logstash_group:
     gid => $logstash_user_gid,
     tag => 'logstash',
   }
 
-  @user { $::logstash::config::logstash_user:
+  @user { $logstash_user:
     comment => 'logstash system account',
     tag     => 'logstash',
     uid     => $logstash_user_uid,
     gid     => $logstash_user_gid,
     home    => "${logstash_home}/logstash",
-    require => User[$::logstash::config::logstash_group],
+    require => User[$logstash_group],
   }
 }
