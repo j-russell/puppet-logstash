@@ -13,17 +13,17 @@ class logstash::user (
 
   Group { ensure => present }
 
-  @group { $::logstash::config::group:
+  @group { $::logstash::config::logstash_group:
     gid => $logstash_user_gid,
     tag => 'logstash',
   }
 
-  @user { $::logstash::config::user:
+  @user { $::logstash::config::logstash_user:
     comment => 'logstash system account',
     tag     => 'logstash',
     uid     => $logstash_user_uid,
     gid     => $logstash_user_gid,
     home    => "${logstash_home}/logstash",
-    require => User[$::logstash::config::group],
+    require => User[$::logstash::config::logstash_group],
   }
 }
