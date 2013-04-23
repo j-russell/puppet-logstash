@@ -4,6 +4,13 @@ class logstash::shipper {
   Group <| tag == 'logstash' |>
   User <| tag == 'logstash' |>
 
+  service { 'logstash-shipper':
+    ensure    => 'running',
+    hasstatus => true,
+    enable    => true,
+    require   => Logstash::Javainitscript['logstash-shipper'],
+  }
+
   include concat::setup
 
   ::concat { "${::logstash::config::logstash_etc}/shipper.conf":
@@ -53,13 +60,6 @@ class logstash::shipper {
     servicejar     => $::logstash::package::jar,
     serviceargs    => " agent -f ${::logstash::config::logstash_etc}/shipper.conf -l ${::logstash::config::logstash_log}/shipper.log",
     java_home      => $::logstash::config::java_home,
-  }
-
-  service { 'logstash-shipper':
-    ensure    => 'running',
-    hasstatus => true,
-    enable    => true,
-    require   => Logstash::Javainitscript['logstash-shipper'],
   }
 
   file { '/etc/logrotate.d/logstash-shipper':
