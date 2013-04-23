@@ -5,6 +5,13 @@ class logstash::indexer (
   Group <| tag == 'logstash' |>
   User <| tag == 'logstash' |>
 
+  service { 'logstash-indexer':
+    ensure    => 'running',
+    hasstatus => true,
+    enable    => true,
+    require   => [Logstash::Javainitscript['logstash-indexer'], Class['::logstash::package']],
+  }
+
   include concat::setup
 
   ::concat { "${::logstash::config::logstash_etc}/indexer.conf":
@@ -54,13 +61,6 @@ class logstash::indexer (
     servicejar     => $::logstash::package::jar,
     serviceargs    => " agent -f ${::logstash::config::logstash_etc}/indexer.conf -w ${filterworkers} -l ${::logstash::config::logstash_log}/indexer.log",
     java_home      => $::logstash::config::java_home,
-  }
-
-  service { 'logstash-indexer':
-    ensure    => 'running',
-    hasstatus => true,
-    enable    => true,
-    require   => [Logstash::Javainitscript['logstash-indexer'], Class['::logstash::package']],
   }
 
   if $::logstash::config::elasticsearch_provider == 'embedded' {
