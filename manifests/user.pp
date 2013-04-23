@@ -8,17 +8,14 @@ class logstash::user (
     ensure     => present,
     managehome => true,
     shell      => '/bin/false',
-    system     => true
+    system     => true,
   }
 
-  Group {
-    ensure  => present,
-    require => User[$::logstash::config::user]
-  }
+  Group { ensure => present }
 
   @group { $::logstash::config::group:
     gid => $logstash_user_gid,
-    tag => 'logstash';
+    tag => 'logstash',
   }
 
   @user { $::logstash::config::user:
@@ -26,6 +23,7 @@ class logstash::user (
     tag     => 'logstash',
     uid     => $logstash_user_uid,
     gid     => $logstash_user_gid,
-    home    => "${logstash_home}/logstash";
+    home    => "${logstash_home}/logstash",
+    require => User[$::logstash::config::group],
   }
 }
