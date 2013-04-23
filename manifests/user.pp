@@ -27,6 +27,6 @@ class logstash::user (
     uid     => $logstash_user_uid,
     gid     => $logstash_user_gid,
     home    => "${logstash_home}/logstash",
-    require => User[$logstash_group],
+    require => Group[$logstash_group],
   }
 }
