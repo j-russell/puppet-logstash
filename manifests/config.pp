@@ -5,7 +5,7 @@ class logstash::config (
   $logstash_version       = '1.1.10',
   $logstash_log           = '/var/log/logstash',
   $logstash_jar_provider  = 'http',
-  $logstash_baseurl       = 'https://logstash.objects.dreamhost.com/release/',
+  $logstash_baseurl       = 'http://logstash.objects.dreamhost.com/release/',
   $logstash_verbose       = 'no',
   $logstash_user          = 'logstash',
   $logstash_user_uid      = 3300,
