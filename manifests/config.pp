@@ -5,6 +5,7 @@ class logstash::config (
   $logstash_version       = '1.1.10',
   $logstash_log           = '/var/log/logstash',
   $logstash_jar_provider  = 'http',
+  $logstash_jar           = undef,
   $logstash_baseurl       = 'http://logstash.objects.dreamhost.com/release',
   $logstash_verbose       = 'no',
   $logstash_user          = 'logstash',
@@ -47,6 +48,7 @@ class logstash::config (
   class { '::logstash::package':
     logstash_home         => $logstash_home,
     logstash_version      => $logstash_version,
+    logstash_jar          => $logstash_jar,
     logstash_jar_provider => $logstash_jar_provider,
     logstash_baseurl      => $logstash_baseurl,
   }
