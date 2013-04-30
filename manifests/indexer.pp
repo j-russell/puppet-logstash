@@ -1,48 +1,15 @@
-class logstash::indexer {
-  Class['::logstash::config','::logstash::package'] -> Class['::logstash::indexer']
+class logstash::indexer (
+  $filterworkers = 1) {
+  Class['::logstash::config', '::logstash::package'] -> Class['::logstash::indexer']
 
-  User <| tag == 'logstash' |>
   Group <| tag == 'logstash' |>
+  User <| tag == 'logstash' |>
 
-  include concat::setup
-
-  ::concat { "${::logstash::config::logstash_etc}/indexer.conf":
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    notify => Service['logstash-indexer'];
-  }
-
-  ::concat::fragment {
-    'logstash-indexer_input_header':
-      target  => "${::logstash::config::logstash_etc}/indexer.conf",
-      order   => '0999',
-      content => "input {\n";
-
-    'logstash-indexer_input_footer':
-      target  => "${::logstash::config::logstash_etc}/indexer.conf",
-      order   => '1998',
-      content => "}\n";
-
-    'logstash-indexer_filter_header':
-      target  => "${::logstash::config::logstash_etc}/indexer.conf",
-      order   => '1999',
-      content => "filter {\n";
-
-    'logstash-indexer_filter_footer':
-      target  => "${::logstash::config::logstash_etc}/indexer.conf",
-      order   => '2998',
-      content => "}\n";
-
-    'logstash-indexer_output_header':
-      target  => "${::logstash::config::logstash_etc}/indexer.conf",
-      order   => '2999',
-      content => "output {\n";
-
-    'logstash-indexer_output_footer':
-      target  => "${::logstash::config::logstash_etc}/indexer.conf",
-      order   => '3999',
-      content => "}\n"
+  service { 'logstash-indexer':
+    ensure    => 'running',
+    hasstatus => true,
+    enable    => true,
+    require   => [Logstash::Javainitscript['logstash-indexer'], Class['::logstash::package']],
   }
 
   ::logstash::javainitscript { 'logstash-indexer':
@@ -51,17 +18,19 @@ class logstash::indexer {
     servicehome    => $::logstash::config::logstash_home,
     servicelogfile => "${::logstash::config::logstash_log}/indexer.log",
     servicejar     => $::logstash::package::jar,
-    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/indexer.conf -l ${::logstash::config::logstash_log}/indexer.log",
+    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/indexer -w ${filterworkers} -l ${::logstash::config::logstash_log}/indexer.log",
     java_home      => $::logstash::config::java_home,
   }
 
-  service { 'logstash-indexer':
-    ensure    => 'running',
-    hasstatus => true,
-    enable    => true,
-    require   => [
-      Logstash::Javainitscript['logstash-indexer'],
-      Class['::logstash::package']],
+  file { "${::logstash::config::logstash_etc}/indexer":
+    ensure  => directory,
+    purge   => true,
+    recurse => true,
+    force   => true,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    before  => Service['logstash-indexer'],
   }
 
   if $::logstash::config::elasticsearch_provider == 'embedded' {

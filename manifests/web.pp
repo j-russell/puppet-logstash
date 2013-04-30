@@ -1,8 +1,8 @@
 class logstash::web {
   Class['::logstash::config', '::logstash::package'] -> Class['::logstash::web']
 
-  User <| tag == 'logstash' |>
   Group <| tag == 'logstash' |>
+  User <| tag == 'logstash' |>
 
   logstash::javainitscript { 'logstash-web':
     serviceuser    => $::logstash::config::logstash_user,
