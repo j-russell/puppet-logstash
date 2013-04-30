@@ -41,7 +41,7 @@ define logstash::config::indexer::filter (
     }
   }
 
-  ::concat::fragment { "logstash_shipper_filter_${type}_${name}":
+  ::concat::fragment { "logstash_indexer_filter_${type}_${name}":
     target  => $target,
     order   => $config_order,
     content => template('logstash/config/fragment.erb'),

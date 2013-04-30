@@ -37,7 +37,7 @@ define logstash::config::indexer::output (
     }
   }
 
-  ::concat::fragment { "logstash_shipper_output_${type}_${name}":
+  ::concat::fragment { "logstash_indexer_output_${type}_${name}":
     target  => $target,
     order   => $config_order,
     content => template('logstash/config/fragment.erb'),
