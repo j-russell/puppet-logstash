@@ -27,17 +27,21 @@ define logstash::config::shipper::filter (
         mode   => '0644',
         notify => Service[$service],
     }
+  }
 
-    ::concat::fragment {
-      'logstash-shipper_filter_header':
-        target  => $target,
-        order   => '000',
-        content => "filter {\n";
+  if !defined(Concat::Fragment['logstash-shipper_filter_header']) {
+    ::concat::fragment { 'logstash-shipper_filter_header':
+      target  => $target,
+      order   => '000',
+      content => "filter {\n",
+    }
+  }
 
-      'logstash-shipper_filter_footer':
-        target  => $target,
-        order   => '200',
-        content => "}\n";
+  if !defined(Concat::Fragment['logstash-shipper_filter_footer']) {
+    ::concat::fragment { 'logstash-shipper_filter_footer':
+      target  => $target,
+      order   => '200',
+      content => "}\n",
     }
   }
 

@@ -23,17 +23,21 @@ define logstash::config::shipper::output (
         mode   => '0644',
         notify => Service[$service],
     }
+  }
 
-    ::concat::fragment {
-      'logstash-shipper_output_header':
-        target  => $target,
-        order   => '000',
-        content => "output {\n";
+  if !defined(Concat::Fragment['logstash-shipper_output_header']) {
+    ::concat::fragment { 'logstash-shipper_output_header':
+      target  => $target,
+      order   => '000',
+      content => "output {\n",
+    }
+  }
 
-      'logstash-shipper_output_footer':
-        target  => $target,
-        order   => '200',
-        content => "}\n";
+  if !defined(Concat::Fragment['logstash-shipper_output_footer']) {
+    ::concat::fragment { 'logstash-shipper_output_footer':
+      target  => $target,
+      order   => '200',
+      content => "}\n",
     }
   }
 

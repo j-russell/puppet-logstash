@@ -27,17 +27,21 @@ define logstash::config::indexer::filter (
         mode   => '0644',
         notify => Service[$service],
     }
+  }
 
-    ::concat::fragment {
-      'logstash-indexer_filter_header':
-        target  => $target,
-        order   => '000',
-        content => "filter {\n";
+  if !defined(Concat::Fragment['logstash-indexer_filter_header']) {
+    ::concat::fragment { 'logstash-indexer_filter_header':
+      target  => $target,
+      order   => '000',
+      content => "filter {\n",
+    }
+  }
 
-      'logstash-indexer_filter_footer':
-        target  => $target,
-        order   => '200',
-        content => "}\n";
+  if !defined(Concat::Fragment['logstash-indexer_filter_footer']) {
+    ::concat::fragment { 'logstash-indexer_filter_footer':
+      target  => $target,
+      order   => '200',
+      content => "}\n",
     }
   }
 

@@ -23,17 +23,21 @@ define logstash::config::shipper::input (
         mode   => '0644',
         notify => Service[$service],
     }
+  }
 
-    ::concat::fragment {
-      'logstash-shipper_input_header':
-        target  => $target,
-        order   => '000',
-        content => "input {\n";
+  if !defined(Concat::Fragment['logstash-shipper_input_header']) {
+    ::concat::fragment { 'logstash-shipper_input_header':
+      target  => $target,
+      order   => '000',
+      content => "input {\n",
+    }
+  }
 
-      'logstash-shipper_input_footer':
-        target  => $target,
-        order   => '200',
-        content => "}\n";
+  if !defined(Concat::Fragment['logstash-shipper_input_footer']) {
+    ::concat::fragment { 'logstash-shipper_input_footer':
+      target  => $target,
+      order   => '200',
+      content => "}\n",
     }
   }
 
