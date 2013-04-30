@@ -29,16 +29,16 @@ define logstash::config::indexer::filter (
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_${filename}_filter_header']) {
-    ::concat::fragment { 'logstash-indexer_${filename}_filter_header':
+  if !defined(Concat::Fragment["logstash-indexer_${filename}_filter_header"]) {
+    ::concat::fragment { "logstash-indexer_${filename}_filter_header":
       target  => $target,
       order   => '000',
       content => "filter {\n",
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_${filename}_filter_footer']) {
-    ::concat::fragment { 'logstash-indexer_${filename}_filter_footer':
+  if !defined(Concat::Fragment["logstash-indexer_${filename}_filter_footer"]) {
+    ::concat::fragment { "logstash-indexer_${filename}_filter_footer":
       target  => $target,
       order   => '200',
       content => "}\n",

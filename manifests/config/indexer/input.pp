@@ -25,16 +25,16 @@ define logstash::config::indexer::input (
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_${filename}_input_header']) {
-    ::concat::fragment { 'logstash-indexer_${filename}_input_header':
+  if !defined(Concat::Fragment["logstash-indexer_${filename}_input_header"]) {
+    ::concat::fragment { "logstash-indexer_${filename}_input_header":
       target  => $target,
       order   => '000',
       content => "input {\n",
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_${filename}_input_footer']) {
-    ::concat::fragment { 'logstash-indexer_${filename}_input_footer':
+  if !defined(Concat::Fragment["logstash-indexer_${filename}_input_footer"]) {
+    ::concat::fragment { "logstash-indexer_${filename}_input_footer":
       target  => $target,
       order   => '200',
       content => "}\n",

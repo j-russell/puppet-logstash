@@ -25,16 +25,16 @@ define logstash::config::shipper::output (
     }
   }
 
-  if !defined(Concat::Fragment['logstash-shipper_${filename}_output_header']) {
-    ::concat::fragment { 'logstash-shipper_${filename}_output_header':
+  if !defined(Concat::Fragment["logstash-shipper_${filename}_output_header"]) {
+    ::concat::fragment { "logstash-shipper_${filename}_output_header":
       target  => $target,
       order   => '000',
       content => "output {\n",
     }
   }
 
-  if !defined(Concat::Fragment['logstash-shipper_${filename}_output_footer']) {
-    ::concat::fragment { 'logstash-shipper_${filename}_output_footer':
+  if !defined(Concat::Fragment["logstash-shipper_${filename}_output_footer"]) {
+    ::concat::fragment { "logstash-shipper_${filename}_output_footer":
       target  => $target,
       order   => '200',
       content => "}\n",
