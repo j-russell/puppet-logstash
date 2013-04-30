@@ -18,7 +18,7 @@ class logstash::indexer (
     servicehome    => $::logstash::config::logstash_home,
     servicelogfile => "${::logstash::config::logstash_log}/indexer.log",
     servicejar     => $::logstash::package::jar,
-    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/indexer/*.{input,filter,output} -w ${filterworkers} -l ${::logstash::config::logstash_log}/indexer.log",
+    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/indexer/*.conf -w ${filterworkers} -l ${::logstash::config::logstash_log}/indexer.log",
     java_home      => $::logstash::config::java_home,
   }
 

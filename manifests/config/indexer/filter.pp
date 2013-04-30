@@ -8,8 +8,11 @@ define logstash::config::indexer::filter (
   include concat::setup
 
   if !$file {
-    $filename = "${name}.filter"
+    $filename = "${name}.filter.conf"
   } else {
+    if !($file =~ /\.conf$/) {
+      fail("File ${file} does not end in .conf")
+    }
     $filename = $file
   }
 

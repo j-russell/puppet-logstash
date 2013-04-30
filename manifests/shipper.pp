@@ -18,7 +18,7 @@ class logstash::shipper (
     servicehome    => $::logstash::config::logstash_home,
     servicelogfile => "${::logstash::config::logstash_log}/shipper.log",
     servicejar     => $::logstash::package::jar,
-    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/shipper/*.{input,filter,output} -w ${filterworkers} -l ${::logstash::config::logstash_log}/shipper.log",
+    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/shipper/*.conf -w ${filterworkers} -l ${::logstash::config::logstash_log}/shipper.log",
     java_home      => $::logstash::config::java_home,
   }
 

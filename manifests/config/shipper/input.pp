@@ -8,8 +8,11 @@ define logstash::config::shipper::input (
   include concat::setup
 
   if !$file {
-    $filename = "${name}.input"
+    $filename = "${name}.input.conf"
   } else {
+    if !($file =~ /\.conf$/) {
+      fail("File ${file} does not end in .conf")
+    }
     $filename = $file
   }
 
