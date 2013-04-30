@@ -1,48 +1,15 @@
-class logstash::shipper {
+class logstash::shipper (
+  $filterworkers = 1) {
   Class['::logstash::config', '::logstash::package'] -> Class['::logstash::shipper']
 
-  User <| tag == 'logstash' |>
   Group <| tag == 'logstash' |>
+  User <| tag == 'logstash' |>
 
-  include concat::setup
-
-  ::concat { "${::logstash::config::logstash_etc}/shipper.conf":
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    notify => Service['logstash-shipper'];
-  }
-
-  ::concat::fragment {
-    'logstash-shipper_input_header':
-      target  => "${::logstash::config::logstash_etc}/shipper.conf",
-      order   => '0999',
-      content => "input {\n";
-
-    'logstash-shipper_input_footer':
-      target  => "${::logstash::config::logstash_etc}/shipper.conf",
-      order   => '1998',
-      content => "}\n";
-
-    'logstash-shipper_filter_header':
-      target  => "${::logstash::config::logstash_etc}/shipper.conf",
-      order   => '1999',
-      content => "filter {\n";
-
-    'logstash-shipper_filter_footer':
-      target  => "${::logstash::config::logstash_etc}/shipper.conf",
-      order   => '2998',
-      content => "}\n";
-
-    'logstash-shipper_output_header':
-      target  => "${::logstash::config::logstash_etc}/shipper.conf",
-      order   => '2999',
-      content => "output {\n";
-
-    'logstash-shipper_output_footer':
-      target  => "${::logstash::config::logstash_etc}/shipper.conf",
-      order   => '3999',
-      content => "}\n"
+  service { 'logstash-shipper':
+    ensure    => 'running',
+    hasstatus => true,
+    enable    => true,
+    require   => [Logstash::Javainitscript['logstash-shipper'], Class['::logstash::package']],
   }
 
   ::logstash::javainitscript { 'logstash-shipper':
@@ -51,15 +18,19 @@ class logstash::shipper {
     servicehome    => $::logstash::config::logstash_home,
     servicelogfile => "${::logstash::config::logstash_log}/shipper.log",
     servicejar     => $::logstash::package::jar,
-    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/shipper.conf -l ${::logstash::config::logstash_log}/shipper.log",
+    serviceargs    => " agent -f ${::logstash::config::logstash_etc}/shipper -w ${filterworkers} -l ${::logstash::config::logstash_log}/shipper.log",
     java_home      => $::logstash::config::java_home,
   }
 
-  service { 'logstash-shipper':
-    ensure    => 'running',
-    hasstatus => true,
-    enable    => true,
-    require   => Logstash::Javainitscript['logstash-shipper'],
+  file { "${::logstash::config::logstash_etc}/shipper":
+    ensure  => directory,
+    purge   => true,
+    recurse => true,
+    force   => true,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    before  => Service['logstash-shipper'],
   }
 
   file { '/etc/logrotate.d/logstash-shipper':
