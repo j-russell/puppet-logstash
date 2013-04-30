@@ -17,7 +17,7 @@ define logstash::config::indexer::filter (
     $params['patterns_dir'] = "[\"${::logstash::config::grok_patterns_dir}\"]"
   }
 
-  $target  = "${::logstash::config::logstash_etc}/${filename}"
+  $target  = "${::logstash::config::logstash_etc}/indexer/${filename}"
   $service = 'logstash-indexer'
 
   if !defined(Concat[$target]) {
@@ -29,16 +29,16 @@ define logstash::config::indexer::filter (
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_filter_header']) {
-    ::concat::fragment { 'logstash-indexer_filter_header':
+  if !defined(Concat::Fragment['logstash-indexer_${filename}_filter_header']) {
+    ::concat::fragment { 'logstash-indexer_${filename}_filter_header':
       target  => $target,
       order   => '000',
       content => "filter {\n",
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_filter_footer']) {
-    ::concat::fragment { 'logstash-indexer_filter_footer':
+  if !defined(Concat::Fragment['logstash-indexer_${filename}_filter_footer']) {
+    ::concat::fragment { 'logstash-indexer_${filename}_filter_footer':
       target  => $target,
       order   => '200',
       content => "}\n",

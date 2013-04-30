@@ -23,11 +23,14 @@ class logstash::shipper (
   }
 
   file { "${::logstash::config::logstash_etc}/shipper":
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    before => Service['logstash-shipper'],
+    ensure  => directory,
+    purge   => true,
+    recurse => true,
+    force   => true,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    before  => Service['logstash-shipper'],
   }
 
   file { '/etc/logrotate.d/logstash-shipper':

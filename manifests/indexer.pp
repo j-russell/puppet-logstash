@@ -23,11 +23,14 @@ class logstash::indexer (
   }
 
   file { "${::logstash::config::logstash_etc}/indexer":
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    before => Service['logstash-indexer'],
+    ensure  => directory,
+    purge   => true,
+    recurse => true,
+    force   => true,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    before  => Service['logstash-indexer'],
   }
 
   if $::logstash::config::elasticsearch_provider == 'embedded' {

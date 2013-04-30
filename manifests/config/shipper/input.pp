@@ -13,7 +13,7 @@ define logstash::config::shipper::input (
     $filename = $file
   }
 
-  $target  = "${::logstash::config::logstash_etc}/${filename}"
+  $target  = "${::logstash::config::logstash_etc}/shipper/${filename}"
   $service = 'logstash-shipper'
 
   if !defined(Concat[$target]) {
@@ -25,16 +25,16 @@ define logstash::config::shipper::input (
     }
   }
 
-  if !defined(Concat::Fragment['logstash-shipper_input_header']) {
-    ::concat::fragment { 'logstash-shipper_input_header':
+  if !defined(Concat::Fragment['logstash-shipper_${filename}_input_header']) {
+    ::concat::fragment { 'logstash-shipper_${filename}_input_header':
       target  => $target,
       order   => '000',
       content => "input {\n",
     }
   }
 
-  if !defined(Concat::Fragment['logstash-shipper_input_footer']) {
-    ::concat::fragment { 'logstash-shipper_input_footer':
+  if !defined(Concat::Fragment['logstash-shipper_${filename}_input_footer']) {
+    ::concat::fragment { 'logstash-shipper_${filename}_input_footer':
       target  => $target,
       order   => '200',
       content => "}\n",

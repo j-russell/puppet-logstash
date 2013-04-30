@@ -13,7 +13,7 @@ define logstash::config::indexer::output (
     $filename = $file
   }
 
-  $target  = "${::logstash::config::logstash_etc}/${filename}"
+  $target  = "${::logstash::config::logstash_etc}/indexer/${filename}"
   $service = 'logstash-indexer'
 
   if !defined(Concat[$target]) {
@@ -25,16 +25,16 @@ define logstash::config::indexer::output (
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_output_header']) {
-    ::concat::fragment { 'logstash-indexer_output_header':
+  if !defined(Concat::Fragment['logstash-indexer_${filename}_output_header']) {
+    ::concat::fragment { 'logstash-indexer_${filename}_output_header':
       target  => $target,
       order   => '000',
       content => "output {\n",
     }
   }
 
-  if !defined(Concat::Fragment['logstash-indexer_output_footer']) {
-    ::concat::fragment { 'logstash-indexer_output_footer':
+  if !defined(Concat::Fragment['logstash-indexer_${filename}_output_footer']) {
+    ::concat::fragment { 'logstash-indexer_${filename}_output_footer':
       target  => $target,
       order   => '200',
       content => "}\n",

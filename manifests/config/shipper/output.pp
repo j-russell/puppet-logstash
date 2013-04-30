@@ -13,7 +13,7 @@ define logstash::config::shipper::output (
     $filename = $file
   }
 
-  $target  = "${::logstash::config::logstash_etc}/${filename}"
+  $target  = "${::logstash::config::logstash_etc}/shipper/${filename}"
   $service = 'logstash-shipper'
 
   if !defined(Concat[$target]) {
@@ -25,16 +25,16 @@ define logstash::config::shipper::output (
     }
   }
 
-  if !defined(Concat::Fragment['logstash-shipper_output_header']) {
-    ::concat::fragment { 'logstash-shipper_output_header':
+  if !defined(Concat::Fragment['logstash-shipper_${filename}_output_header']) {
+    ::concat::fragment { 'logstash-shipper_${filename}_output_header':
       target  => $target,
       order   => '000',
       content => "output {\n",
     }
   }
 
-  if !defined(Concat::Fragment['logstash-shipper_output_footer']) {
-    ::concat::fragment { 'logstash-shipper_output_footer':
+  if !defined(Concat::Fragment['logstash-shipper_${filename}_output_footer']) {
+    ::concat::fragment { 'logstash-shipper_${filename}_output_footer':
       target  => $target,
       order   => '200',
       content => "}\n",
