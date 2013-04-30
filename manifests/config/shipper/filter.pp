@@ -8,11 +8,8 @@ define logstash::config::shipper::filter (
   include concat::setup
 
   if !$file {
-    $filename = "${name}.filter.conf"
+    $filename = "${name}.filter"
   } else {
-    if !($file =~ /\.conf$/) {
-      fail("File ${file} does not end in .conf")
-    }
     $filename = $file
   }
 

@@ -8,11 +8,8 @@ define logstash::config::shipper::output (
   include concat::setup
 
   if !$file {
-    $filename = "${name}.output.conf"
+    $filename = "${name}.output"
   } else {
-    if !($file =~ /\.conf$/) {
-      fail("File ${file} does not end in .conf")
-    }
     $filename = $file
   }
 
