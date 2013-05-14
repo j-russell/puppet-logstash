@@ -59,20 +59,11 @@ function checkProcessIsRunning {
    if [ ! -e /proc/$pid ]; then return 1; fi
    return 0; }
  
-# Returns 0 if the process with PID $1 is our Java service process.
-function checkProcessIsOurService {
-   local pid="$1"
-   if [ "$(ps -p $pid --no-headers -o comm)" != "$javaCommand" ]; then return 1; fi
-   grep -q --binary -F "$javaCommandLineKeyword" /proc/$pid/cmdline
-   if [ $? -ne 0 ]; then return 1; fi
-   return 0; }
- 
 # Returns 0 when the service is running and sets the variable $pid to the PID.
 function getServicePID {
    if [ ! -f $pidFile ]; then return 1; fi
    pid="$(<$pidFile)"
    checkProcessIsRunning $pid || return 1
-   checkProcessIsOurService $pid || return 1
    return 0; }
  
 function startServiceProcess {
