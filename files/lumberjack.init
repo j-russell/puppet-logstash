@@ -6,7 +6,7 @@
 #       I sleep when idle, then I ship logs all day!
 #       I parse your logs, I eat the JVM agent for lunch!
 #
-
+  
 # Source function library.
 . /etc/init.d/functions
 
@@ -18,6 +18,8 @@ lumberjack=${LUMBERJACK-/opt/${prog}/bin/${prog}}
 config=${CONFIG-/etc/${prog}/${prog}.conf}
 piddir=${PIDDIR-/var/run/${prog}}
 logdir=${LOGDIR-/var/log}
+host=${HOST-127.0.0.1}
+port=${{PORT-12345}
 ssl_ca_path=${SSL_CA_PATH-/etc/lumberjack/lumberjack.crt}
 
 [ ! -d ${piddir} ] && mkdir -p ${piddir}
@@ -25,14 +27,15 @@ ssl_ca_path=${SSL_CA_PATH-/etc/lumberjack/lumberjack.crt}
 start() {
         [ ! -f ${config} ] && (echo -n "No config found: ${config}" && echo_failure || echo) && exit 1
         [ ! -f ${ssl_ca_path} ] && (echo -n "Invalid ssl-ca-path: ${ssl_ca_path}" && echo_failure || echo) && exit 1
-        [ -z "${HOST}" ] && (echo -n "No host specified" && echo_failure || echo) && exit 1
-        [ -z "${PORT}" ] && (echo -n "No port specified" && echo_failure || echo) && exit 1
         echo "Starting ${prog}: "
         ORIGIFS=${IFS}; IFS=$'\n'
         for DAEMON_OPTS in $(cat ${config}); do
             PIDFILE=$(mktemp --tmpdir=${piddir} XXX.pid)
             IFS=${ORIGIFS}
-            ${lumberjack} --host ${HOST} --port ${PORT} --ssl-ca-path ${ssl_ca_path} ${DAEMON_OPTS} >> ${logdir}/${prog}.log &
+            [ $(echo ${DAEMON_OPTS} |grep -c '\-\-host') -gt 0 ] && HOST="" || HOST=" --host ${host}"
+            [ $(echo ${DAEMON_OPTS} |grep -c '\-\-port') -gt 0 ] && PORT="" || PORT=" --port ${port}" 
+            [ $(echo ${DAEMON_OPTS} |grep -c '\-\-ssl\-ca\-path') -gt 0 ] && SSL_CA_PATH="" || SSL_CA_PATH=" --ssl-ca-path ${ssl_ca_path}" 
+            ${lumberjack}${HOST}${PORT}${SSL_CA_PATH} ${DAEMON_OPTS} >> ${logdir}/${prog}.log &
             echo $! > ${PIDFILE}
             if kill -0 $(cat ${PIDFILE}) &>/dev/null; then
               echo -n "Started PID $(cat ${PIDFILE}): "
