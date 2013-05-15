@@ -1,0 +1,86 @@
+#!/bin/bash
+#
+#       /etc/rc.d/init.d/lumberjack
+#
+#       I'm a lumberjack and I'm ok!
+#       I sleep when idle, then I ship logs all day!
+#       I parse your logs, I eat the JVM agent for lunch!
+#
+
+# Source function library.
+. /etc/init.d/functions
+
+
+[ -f /etc/sysconfig/$(basename ${0}) ] && . /etc/sysconfig/$(basename ${0})
+
+prog=${PROG-lumberjack}
+lumberjack=${LUMBERJACK-/opt/${prog}/bin/${prog}}
+config=${CONFIG-/etc/${prog}/${prog}.conf}
+piddir=${PIDDIR-/var/run/${prog}}
+logdir=${LOGDIR-/var/log}
+ssl_ca_path=${SSL_CA_PATH-/etc/lumberjack/lumberjack.crt}
+
+[ ! -d ${piddir} ] && mkdir -p ${piddir}
+
+start() {
+        [ ! -f ${config} ] && (echo -n "No config found: ${config}" && echo_failure || echo) && exit 1
+        [ ! -f ${ssl_ca_path} ] && (echo -n "Invalid ssl-ca-path: ${ssl_ca_path}" && echo_failure || echo) && exit 1
+        [ -z "${HOST}" ] && (echo -n "No host specified" && echo_failure || echo) && exit 1
+        [ -z "${PORT}" ] && (echo -n "No port specified" && echo_failure || echo) && exit 1
+        echo "Starting ${prog}: "
+        ORIGIFS=${IFS}; IFS=$'\n'
+        for DAEMON_OPTS in $(cat ${config}); do
+            PIDFILE=$(mktemp --tmpdir=${piddir} XXX.pid)
+            IFS=${ORIGIFS}
+            ${lumberjack} --host ${HOST} --port ${PORT} --ssl-ca-path ${ssl_ca_path} ${DAEMON_OPTS} >> ${logdir}/${prog}.log &
+            echo $! > ${PIDFILE}
+            if kill -0 $(cat ${PIDFILE}) &>/dev/null; then
+              echo -n "Started PID $(cat ${PIDFILE}): "
+              echo_success && echo
+            else
+              echo_failure || echo
+            fi
+            IFS=$'\n'
+        done
+        IFS=${ORIGIFS}
+        return $?
+}
+
+stop() {
+        if [ $(ls -1 ${piddir} |wc -l) -gt 0 ]; then
+          echo "Shutting down ${prog}: "
+          for PIDFILE in $(find ${piddir} -type f -name "*.pid"); do
+            echo -n "Stopping PID $(cat ${PIDFILE}): "
+            killproc -p ${PIDFILE} ${prog}
+            echo
+          done
+          rm -f ${piddir}/*
+        else
+          echo "not running"
+        fi
+        return $?
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+    status)
+        for PIDFILE in $(find ${piddir} -type f -name "*.pid"); do
+            status -p ${PIDFILE} ${prog}
+        done
+        [ -z "${PIDFILE}" ] && echo "lumberjack is not running"
+        ;;
+    restart)
+        stop
+        start
+        ;;
+    *)
+        echo "Usage: ${prog} {start|stop|status|restart}"
+        exit 1
+        ;;
+esac
+exit $?
