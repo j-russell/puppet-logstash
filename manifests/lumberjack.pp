@@ -3,6 +3,7 @@ define logstash::lumberjack (
   $host = undef,
   $port = undef,
   $ssl_ca_path = undef,
+  $ssl_ca_source = undef,
   $window_size = undef,
   $fields      = undef,
 ) {
@@ -11,7 +12,10 @@ define logstash::lumberjack (
   }
 
   if !defined(Class['::logstash::lumberjack::config']) {
-    class { '::logstash::lumberjack::config': }
+    class { '::logstash::lumberjack::config':
+      ssl_ca_path   => $ssl_ca_path,
+      ssl_ca_source => $ssl_ca_source,
+    }
   }
 
   Class['::logstash::lumberjack::package'] -> Class['::logstash::lumberjack::config']
