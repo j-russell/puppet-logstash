@@ -19,7 +19,7 @@ config=${CONFIG-/etc/${prog}/${prog}.conf}
 piddir=${PIDDIR-/var/run/${prog}}
 logdir=${LOGDIR-/var/log}
 host=${HOST-127.0.0.1}
-port=${{PORT-12345}
+port=${PORT-12345}
 ssl_ca_path=${SSL_CA_PATH-/etc/lumberjack/lumberjack.crt}
 
 [ ! -d ${piddir} ] && mkdir -p ${piddir}
