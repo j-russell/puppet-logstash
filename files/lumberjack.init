@@ -72,10 +72,13 @@ case "$1" in
         stop
         ;;
     status)
+        RETVAL=0
         for PIDFILE in $(find ${piddir} -type f -name "*.pid"); do
             status -p ${PIDFILE} ${prog}
+            [ $? -eq 0 ] || RETVAL=4
         done
-        [ -z "${PIDFILE}" ] && echo "lumberjack is not running"
+        [ -z "${PIDFILE}" ] && echo "lumberjack is not running" && RETVAL=3
+        exit ${RETVAL}
         ;;
     restart)
         stop
