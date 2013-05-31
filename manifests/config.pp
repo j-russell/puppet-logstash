@@ -2,7 +2,7 @@ class logstash::config (
   $logstash_home          = '/usr/local/logstash',
   $logstash_etc           = '/etc/logstash',
   $grok_patterns_dir      = '/etc/logstash/grok',
-  $logstash_version       = '1.1.12',
+  $logstash_version       = '1.1.13',
   $logstash_log           = '/var/log/logstash',
   $logstash_jar_provider  = 'http',
   $logstash_jar           = undef,
